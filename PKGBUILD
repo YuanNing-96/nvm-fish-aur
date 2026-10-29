@@ -4,13 +4,13 @@ pkgver=1.1.2
 pkgrel=1
 pkgdesc="Fish shell wrapper for official nvm using bass - enables nvm commands in fish while preserving full compatibility with bash nvm installations"
 arch=('any')
-url="https://github.com/ChHsiching/nvm-fish-aur"
+url="https://github.com/YuanNing-96/nvm-fish-aur"
 groups=('fish-plugins')
 license=('MIT')
 depends=('nvm' 'fish' 'git')
 makedepends=()
 install="${pkgname}.install"
-source=("${pkgname}::git+https://github.com/ChHsiching/nvm-fish-aur.git#tag=v${pkgver}")
+source=("${pkgname}::git+https://github.com/YuanNing-96/nvm-fish-aur.git#tag=v${pkgver}")
 sha256sums=('SKIP')
 
 package() {
