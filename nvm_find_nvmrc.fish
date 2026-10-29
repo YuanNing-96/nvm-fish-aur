@@ -20,5 +20,5 @@ function nvm_find_nvmrc --description 'Find .nvmrc file in current or parent dir
     return 1
   end
   
-  bass source ~/.nvm/nvm.sh --no-use ';' nvm_find_nvmrc
+  bass source /usr/share/nvm/nvm.sh --no-use ';' nvm_find_nvmrc
 end

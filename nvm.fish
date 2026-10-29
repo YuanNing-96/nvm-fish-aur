@@ -34,7 +34,7 @@ function nvm --description 'Node Version Manager - Fish shell integration'
   # Handle nvm use command with .nvmrc management
   if test "$argv[1]" = "use"; and test (count $argv) -gt 1
     # Execute nvm use command and capture output
-    set -l nvm_output (bass source ~/.nvm/nvm.sh --no-use ';' nvm $argv 2>&1)
+    set -l nvm_output (bass source /usr/share/nvm/nvm.sh --no-use ';' nvm $argv 2>&1)
 
     # Display nvm output to user
     if test -n "$nvm_output"
@@ -74,7 +74,7 @@ function nvm --description 'Node Version Manager - Fish shell integration'
   end
 
   # Execute nvm command for other cases
-  bass source ~/.nvm/nvm.sh --no-use ';' nvm $argv
+  bass source /usr/share/nvm/nvm.sh --no-use ';' nvm $argv
 end
 
 # Helper function to create .nvmrc file with error handling

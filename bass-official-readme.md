@@ -74,7 +74,7 @@ Here is a more realistic example, using the excellent
 [nvm](https://github.com/creationix/nvm):
 
 ```
-> bass source ~/.nvm/nvm.sh --no-use ';' nvm use iojs
+> bass source /usr/share/nvm/nvm.sh --no-use ';' nvm use iojs
 Now using io.js v1.1.0
 ```
 
@@ -93,7 +93,7 @@ You can then very easily pack the command as a function and feel more at home:
 ```
 > funced nvm
 nvm> function nvm
-           bass source ~/.nvm/nvm.sh --no-use ';' nvm $argv
+           bass source /usr/share/nvm/nvm.sh --no-use ';' nvm $argv
        end
 
 > nvm list
