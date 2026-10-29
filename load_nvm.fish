@@ -58,11 +58,11 @@ function load_nvm --on-variable="PWD" --description 'Automatically switch Node.j
         if test "$nvmrc_node_version" = "N/A"
           # Use direct bass call to avoid .nvmrc management prompts
           set -lx NVM_AUTO 1
-          bass source /usr/share/nvm/nvm.sh --no-use ';' nvm install "$pure_version"
+          bass source $NVM_DIR/nvm.sh --no-use ';' nvm install "$pure_version"
         else
           # Use direct bass call to avoid .nvmrc management prompts
           set -lx NVM_AUTO 1
-          bass source /usr/share/nvm/nvm.sh --no-use ';' nvm use "$pure_version"
+          bass source $NVM_DIR/nvm.sh --no-use ';' nvm use "$pure_version"
         end
       end
     end
@@ -72,7 +72,7 @@ function load_nvm --on-variable="PWD" --description 'Automatically switch Node.j
     if test -n "$NVM_BIN"; and test "$NVM_BIN" != "$HOME/.nvm/versions/node/$(nvm version default 2>/dev/null)/bin"
       # Use direct bass call to avoid .nvmrc management prompts and output
       set -lx NVM_AUTO 1
-      bass source /usr/share/nvm/nvm.sh --no-use ';' nvm use default
+      bass source $NVM_DIR/nvm.sh --no-use ';' nvm use default
     end
   end
 end

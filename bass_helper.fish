@@ -120,9 +120,11 @@ end
 # Auto-configure Fish shell integration
 function __nvm_auto_configure_fish --description 'Configure Fish shell for nvm integration'
     set -l fish_config_file "$HOME/.config/fish/config.fish"
-    
+    set -l block_start "# >>> nvm-fish init >>>"
+    set -l block_end "# <<< nvm-fish init <<<"
+
     # Check if already configured
-    if test -f "$fish_config_file" && grep -q "load_nvm" "$fish_config_file"
+    if test -f "$fish_config_file" && grep -qF "$block_start" "$fish_config_file"
         return 0
     end
     
@@ -132,12 +134,38 @@ function __nvm_auto_configure_fish --description 'Configure Fish shell for nvm i
     mkdir -p "$HOME/.config/fish"
     
     # Clean any previous nvm-fish entries first
-    sed -i '/load_nvm/d;/nvm-fish integration/d' "$fish_config_file" 2>/dev/null || true
+    sed -i '/load_nvm/d;/nvm-fish integration/d;/You must call it on initialization/d' "$fish_config_file" 2>/dev/null || true
     
+    if grep -qF "$block_start" "$fish_config_file" 2>/dev/null
+        command sed -i '/^# >>> nvm-fish init >>>/,/^# <<< nvm-fish init <<</d' "$fish_config_file"
+    end
+
     # Add to config.fish with clear markers
     echo "" >> "$fish_config_file"
-    echo "# nvm-fish integration - added automatically" >> "$fish_config_file"
-    echo "# You must call it on initialization or directory switching won't work" >> "$fish_config_file"
+
+    printf '%s\n' \
+        '# >>> nvm-fish init >>>' \
+        '# Sets NVM_DIR, ensures nvm.sh/nvm-exec symlinks, and loads load_nvm' \
+        'if not set -q NVM_DIR' \
+        '    set -gx NVM_DIR $HOME/.nvm' \
+        '    if set -q XDG_CONFIG_HOME' \
+        '        set -gx NVM_DIR $XDG_CONFIG_HOME/nvm' \
+        '    end' \
+        'end' \
+        'set -gx NVM_DIR $NVM_DIR' \
+        'if not test -d $NVM_DIR' \
+        '    command mkdir -p $NVM_DIR' \
+        'end' \
+        'if not test -e $NVM_DIR/nvm.sh' \
+        '    command ln -s /usr/share/nvm/nvm.sh $NVM_DIR/nvm.sh' \
+        'end' \
+        'if not test -e $NVM_DIR/nvm-exec' \
+        '    command ln -s /usr/share/nvm/nvm-exec $NVM_DIR/nvm-exec' \
+        'end' \
+        '# You must call it on initialization or directory switching won'\''t work' \
+        'load_nvm > /dev/stderr' \
+        '# <<< nvm-fish init <<<' >> "$fish_config_file"
+
     echo "load_nvm > /dev/stderr" >> "$fish_config_file"
     
     echo -e " \033[32mFish integration configured\033[0m"
@@ -202,6 +230,28 @@ function __nvm_run_setup --description 'Run complete nvm-fish setup'
     
     echo ""
     
+    # --- 1. set NVM_DIR---
+    if not set -q NVM_DIR
+        set -gx NVM_DIR $HOME/.nvm
+        if set -q XDG_CONFIG_HOME
+            set -gx NVM_DIR $XDG_CONFIG_HOME/nvm
+        end
+    end
+    set -gx NVM_DIR $NVM_DIR
+
+    # --- 2. mkdir ---
+    if not test -d $NVM_DIR
+        command mkdir -vp $NVM_DIR
+    end
+
+    # --- 3. make link ---
+    if not test -e $NVM_DIR/nvm.sh
+        command ln -vs /usr/share/nvm/nvm.sh $NVM_DIR/nvm.sh
+    end
+    if not test -e $NVM_DIR/nvm-exec
+        command ln -vs /usr/share/nvm/nvm-exec $NVM_DIR/nvm-exec
+    end
+
     # Configure Fish shell integration
     __nvm_auto_configure_fish
     
