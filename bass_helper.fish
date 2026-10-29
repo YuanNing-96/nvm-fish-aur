@@ -164,9 +164,8 @@ function __nvm_auto_configure_fish --description 'Configure Fish shell for nvm i
         'end' \
         '# You must call it on initialization or directory switching won'\''t work' \
         'load_nvm > /dev/stderr' \
+        'nvm use --silent default >/dev/null 2>&1' \
         '# <<< nvm-fish init <<<' >> "$fish_config_file"
-
-    echo "load_nvm > /dev/stderr" >> "$fish_config_file"
     
     echo -e " \033[32mFish integration configured\033[0m"
     
